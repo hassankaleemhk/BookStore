@@ -1,0 +1,90 @@
+﻿@model Business_Logic_Layer.OrderViewModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+    int id;
+}
+
+<h2>Place Order</h2>
+
+@using (Html.BeginForm(FormMethod.Post))
+{
+    @Html.HiddenFor(model => model.UnitPrice, new { id = "UnitPrice" })
+
+    @Html.HiddenFor(model => model.TotalAmount)
+    <div class="validation-summary-errors">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.BookId)
+        @Html.TextBoxFor(m => m.BookId, new { @class = "form-control", id = "BookId" })
+    </div>
+
+    <div id="UnitPrice"></div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Quantity)
+        @Html.DropDownListFor(model => model.Quantity, Enumerable.Range(1, 10).Select(i => new SelectListItem { Text = i.ToString(), Value = i.ToString() }), "Select Quantity", new { @class = "form-control", id = "Quantity" })
+    </div>
+
+    <div id="totalBill"></div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Phone_Number)
+        @Html.TextBoxFor(m => m.Phone_Number, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Phone_Number, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Billing_Address)
+        @Html.TextBoxFor(m => m.Billing_Address, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Billing_Address, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Mailing_Address)
+        @Html.TextBoxFor(m => m.Mailing_Address, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Mailing_Address, "", new { @class = "text-danger" })
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add to Cart</button>
+}
+@section scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            
+            $("#Quantity").change(function () {
+                var bookId = $(BookId).val();
+                $.ajax({
+                    url: "@Url.Action("GetBookPrice", "Order")",
+                    data: { bookId: bookId },
+                    success: function (response) {
+                        if ($.isNumeric(response)) {
+                            $("#UnitPrice").val(response); 
+                            $("#UnitPrice").text("Price: " + response);
+                            updateTotalBill(response);
+                        } else {
+                            $("#UnitPrice").text("Invalid Price");
+                        }
+                    }
+                });
+            });
+
+         
+            $("#Quantity").change(function () {
+                updateTotalBill($("#UnitPrice").text().replace("Price: ", ""));
+            });
+
+          
+            function updateTotalBill(price) {
+                var quantity = parseInt($("#Quantity").val());
+
+                if (!isNaN(parseFloat(price)) && !isNaN(quantity) && parseFloat(price) > 0 && quantity > 0) {
+                    var total = parseFloat(price) * quantity;
+                    $("#totalBill").text("Total Bill: " + total);
+                    $("#TotalAmount").val(total);
+                } else {
+                    $("#totalBill").text("Total Bill: Invalid Price or Quantity");
+                }
+            }
+        });
+    </script>
+}
+

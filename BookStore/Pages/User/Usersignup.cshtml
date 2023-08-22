@@ -1,0 +1,35 @@
+﻿@page
+@model Database_Access_Layer.User
+@{
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+@using (Html.BeginForm("", "", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <table class="table">
+        <thead>
+            <tr>
+                <th style="background-color:lavender;">Name</th>
+                <th style="background-color:lavender;">Email</th>
+                <th style="background-color:lavender;">Username</th>
+                <th style="background-color:lavender;">Password</th>
+                
+                
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Html.EditorFor(model => model.Name, new { htmlAttributes = new { @type = "text" } })</td>
+               <td>@Html.EditorFor(model => model.Email, new { htmlAttributes = new { @type = "email" } })</td>
+                <td>@Html.EditorFor(model => model.Username, new { htmlAttributes = new { @type = "text" } })</td>
+                <td>@Html.EditorFor(model => model.Password)</td>
+                <td>
+                
+                <input type="submit" value="Save" class="btn btn-primary" />
+                </td>
+               
+            </tr>
+        </tbody>
+    </table>
+}

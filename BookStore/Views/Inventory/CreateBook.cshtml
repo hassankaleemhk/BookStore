@@ -1,0 +1,40 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model Business_Logic_Layer.BookViewModel
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+<h1>Add Books</h1>
+@using (Html.BeginForm())
+{
+  <div class="form-group">
+        @Html.LabelFor(m => m.Title)
+        @Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Author)
+        @Html.TextBoxFor(m => m.Author, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Author, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Price)
+        @Html.TextBoxFor(m => m.Price, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Price, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.InventoryCount)
+        @Html.TextBoxFor(m => m.InventoryCount, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.InventoryCount, "", new { @class = "text-danger" })
+    </div>
+   @* <div class="form-group">
+        @Html.LabelFor(m => m.AdminId)
+        @Html.DropDownListFor(model => model.AdminId, new SelectList((List<SelectListItem>)ViewData["Admins"], "Value", "Text"), "Select an admin",new { @class = "form-control" })
+    </div>*@
+
+    <button type="submit" class="btn btn-primary">Add Books</button>
+
+}

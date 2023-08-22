@@ -1,0 +1,97 @@
+﻿@model IEnumerable<Business_Logic_Layer.UserViewModel>
+@{
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+    int editId = 0;
+}
+<p>
+    <a>Manage Orders</a>
+</p>
+@using (Html.BeginForm(FormMethod.Post)){
+<div>
+    <form method="get" asp-action="UsersRolesAssign">
+        <label for="input1">Search by Roles:</label>
+        <select id="input1" name="input1">
+            <option value="">All</option>
+            <option value="1">Superuser</option>
+            <option value="2">Admin</option>
+            <option value="3">User</option>
+        </select>
+        <label for="sortDate">Sort by Date:</label>
+        <input type="text" id="Username" name="Username">
+        <input type="text" id="Email" name="Email">
+        <input type="text" id="Name" name="Name">
+        <button type="submit" name="button" value="Submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UserId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Username)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Password)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserRoles.RoleName)
+            </th>
+           
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Username)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Password)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserRoles.RoleName)
+                </td>
+                
+
+                <td>
+                    <button type="button" class="edit-button" data-id="@item.UserId">Edit Status</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div id="edit-container"></div>
+}
+
+@section scripts {
+    <script>
+        $(function() {
+            $(".edit-button").click(function() {
+                var id = $(this).data("id");
+                $.get("/Users/Edit/" + id, function(data) {
+                    $("#edit-container").html(data);
+                });
+            });
+        });
+    </script>
+}

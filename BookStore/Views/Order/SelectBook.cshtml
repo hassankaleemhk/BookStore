@@ -1,0 +1,246 @@
+﻿@*@model IEnumerable<Business_Logic_Layer.BookViewModel>
+
+@{
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+<p>
+    <a>Manage Orders</a>
+</p>
+@using (Html.BeginForm(FormMethod.Post))
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.BookId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Author)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Price)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BookId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Author)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        <button type="submit" name="bookId" value="@item.BookId">Place Order</button>       
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+*@
+@model Business_Logic_Layer.SelectBookViewModel
+
+@{
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<p>
+    <a>Manage Orders</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Books.First().BookId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Books.First().Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Books.First().Author)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Books.First().Price)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Books != null)
+        {
+            @foreach (var item in Model.Books)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BookId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Author)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-primary view-details" data-bookid="@item.BookId">View Details</button>
+                    </td>
+                </tr>
+            }
+        }
+         else
+    {
+        <tr>
+            <td colspan="5">No books available.</td>
+        </tr>
+    }
+    </tbody>
+</table>
+@using (Html.BeginForm("SelectBook","Order",FormMethod.Post)){
+@if (Model.ShoppingCart != null && Model.ShoppingCart.Orders != null && Model.ShoppingCart.Orders.Count > 0)
+{
+    <h3>Shopping Cart</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>BookID</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Total Amount</th>
+                <th>Mailing Address</th>
+                <th>Billing Adress</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model.ShoppingCart.Orders)
+            {
+                <tr>
+                    <td>@order.BookId</td>
+                    
+                    <td>@order.Quantity</td>
+                    <td>@order.UnitPrice</td>
+                    <td>@order.TotalAmount</td>
+                    <td>@order.Mailing_Address</td>
+                    <td>@order.Billing_Address</td>
+                    <td>
+                        <button class="btn btn-danger remove-order" data-bookid="@order.BookId" name="submitButton" value="remove">Remove</button>
+                    </td>
+                </tr>
+            }
+           
+        </tbody>
+    </table>
+
+    <button class="btn btn-primary place-order" name="submitButton" value="placeorder">Place Order</button>
+}
+else
+{
+    <p>No items in the shopping cart.</p>
+}
+}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $(".view-details").click(function() {
+            var bookId = $(this).data("bookid");
+            redirectToIndex(bookId);
+        });
+
+        $(".place-order").click(function() {
+            var bookId = @Model.Books.First().BookId; // Get the book ID
+            placeOrder(bookId);
+        });
+
+        // Handle the remove button click event
+        $(".remove-order").click(function() {
+            var bookId = $(this).data("bookid");
+            removeOrder(bookId);
+        });
+
+    });
+
+    function redirectToIndex(bookId) {
+        var url = '/Order/Index?bookId=' + bookId;
+        window.location.href = url;
+    }
+
+    //function placeOrder(bookId) {
+    //    // Send an AJAX request to the server to place the order
+    //    $.ajax({
+    //        url: '/Order/SelectBook', // Update the URL to the appropriate endpoint
+    //        data: { bookId: bookId },
+    //        type: 'POST',
+    //        success: function(response) {
+    //            // Handle the success response (e.g., display a success message, redirect to a confirmation page)
+    //        },
+    //        error: function(xhr, status, error) {
+    //            // Handle the error response (e.g., display an error message)
+    //            console.log(error);
+    //        }
+    //    });
+    //}
+            function placeOrder(bookId) {
+          // Send an AJAX request to the server to place the order
+          $.ajax({
+            url: '/SelectBook/SelectBook', // Update the URL to the appropriate endpoint
+            data: { bookId: bookId, submitButton: "placeorder" }, // Pass the submitButton value
+            type: 'POST',
+            success: function (response) {
+              if (response.success) {
+                // Handle the success response (e.g., display a success message, redirect to a confirmation page)
+                window.location.href = '/Order/OrderConfirmation';
+              } else {
+                // Handle the case where order placement fails
+                console.log("Failed to place the order.");
+              }
+            },
+            error: function (xhr, status, error) {
+              // Handle the error response (e.g., display an error message)
+              console.log(error);
+            }
+          });
+        }
+
+
+    function removeOrder(bookId) {
+    // Send an AJAX request to the server to remove the order
+    $.ajax({
+        url: '/Order/RemoveOrder',
+        data: { bookId: bookId },
+        type: 'POST',
+        success: function(response) {
+            if (response.success) {
+                // Remove the order from the UI
+                $(".order-item[data-bookid='" + bookId + "']").remove();
+            } else {
+                // Handle the case where order removal fails
+                console.log("Failed to remove the order.");
+            }
+        },
+        error: function(xhr, status, error) {
+            // Handle the error response (e.g., display an error message)
+            console.log(error);
+        }
+    });
+}
+
+</script>
+
+
+

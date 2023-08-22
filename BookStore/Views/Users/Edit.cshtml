@@ -1,0 +1,48 @@
+﻿@model Business_Logic_Layer.UserViewModel
+
+@{
+    Layout =null;
+}
+
+
+@using (Html.BeginForm(FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <table class="table">
+        <thead>
+            <tr>
+                <th style="background-color:lavender;">User ID</th>
+                <th style="background-color:lavender;">UserName</th>
+                <th style="background-color:lavender;">Email</th>
+                <th style="background-color:lavender;">Password</th>
+                <th style="background-color:lavender;">Name</th>
+                 <th style="background-color:lavender;">User Role Name</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Html.EditorFor(model => model.UserId)</td>
+                <td>@Html.EditorFor(model => model.Username)</td>
+                <td>@Html.EditorFor(model => model.Email)</td>
+                <td>@Html.EditorFor(model => model.Password)</td>
+                 <td>@Html.EditorFor(model => model.Name)</td>
+                <td>
+                    @Html.DropDownListFor(model => model.UserRoleId, new List<SelectListItem>
+                    {
+                        new SelectListItem { Value = "1", Text = "Superuser" },
+                        new SelectListItem { Value = "2", Text = "Admin" },
+                        new SelectListItem { Value = "3", Text = "User" }
+                    }, "Select a status")
+                </td>
+
+                <td>
+                
+                <input type="submit" value="Save" class="btn btn-primary" />
+                    
+                </td>
+                
+            </tr>
+        </tbody>
+    </table>
+ }

@@ -1,0 +1,45 @@
+﻿@model Business_Logic_Layer.OrderViewModel
+
+@{
+    Layout =null;
+}
+
+
+@using (Html.BeginForm(FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <table class="table">
+        <thead>
+            <tr>
+                <th style="background-color:lavender;">Order ID</th>
+                <th style="background-color:lavender;">User Name</th>
+                <th style="background-color:lavender;">Date Created</th>
+                <th style="background-color:lavender;">Total Amount</th>
+                <th style="background-color:lavender;">Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Html.EditorFor(model => model.OrderId)</td>
+                <td>@Html.EditorFor(model => model.User.Name)</td>
+                <td>@Html.EditorFor(model => model.DateCreated)</td>
+                <td>@Html.EditorFor(model => model.TotalAmount)</td>
+                <td>
+                    @Html.DropDownListFor(model => model.Status, new List<SelectListItem>
+                    {
+                        new SelectListItem { Value = "Pending", Text = "Pending" },
+                        new SelectListItem { Value = "Delivered", Text = "Delivered" }
+                    }, "Select a status")
+                </td>
+
+                <td>
+                
+                <input type="submit" value="Save" class="btn btn-primary" />
+                    
+                </td>
+                
+            </tr>
+        </tbody>
+    </table>
+ }
