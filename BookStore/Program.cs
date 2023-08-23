@@ -1,11 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Database_Access_Layer;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.Json;
 using Business_Logic_Layer;
-using Microsoft.AspNetCore.Session;
-using System.Configuration;
-using System;
 using BookStore.Pages.Shared.Components;
 using BookStore.Views.Users;
 
@@ -65,7 +60,11 @@ app.MapRazorPages();
 app.MapControllers();
 
 app.UseRouting();
-
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<Dbcontext>();
+    db.Database.Migrate();
+}
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute(
