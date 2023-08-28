@@ -25,6 +25,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BookStore\BookStore.csproj" />
     <ProjectReference Include="..\Business Logic Layer\Business Logic Layer.csproj" />
+    <ProjectReference Include="..\LambdaProcessPendingStatus\LambdaProcessPendingStatus.csproj" />
   </ItemGroup>
 
 </Project>
